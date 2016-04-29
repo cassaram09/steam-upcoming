@@ -55,9 +55,13 @@ class SteamUpcoming::Scraper
       :tags => tags.map {|tag| tag.match(/\r|\n|\t/) ? tag.delete("\t").delete("\r").delete("\n") : tag },
       :details => details.map {|child| child.text}
     }
+
   end
 
-  def self.get_page_list(index_url)
+  def self.get_page_number(index_url)
+    doc = Nokogiri::HTML(open(index_url))
+    page_array = []
+    page = doc.css(".search_pagination_right").first.children[5].text.to_i
   end
 
   def self.get_sorting_options(index_url)
