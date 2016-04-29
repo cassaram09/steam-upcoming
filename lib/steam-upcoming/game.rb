@@ -1,0 +1,2 @@
+class SteamUpcoming::Game
+end
