@@ -1,5 +1,3 @@
-require 'pry'
-
 class SteamUpcoming::Scraper
   def self.scrape_index_page(index_url)
     doc = Nokogiri::HTML(open(index_url))
@@ -50,12 +48,10 @@ class SteamUpcoming::Scraper
     about = doc.css(".game_description_snippet")
     tags = doc.css(".glance_tags a").map {|tag| tag.text}
     details = doc.css(".game_area_details_specs")
-    game_page_hash = {
+    game_attributes_hash = {
       :about => about.text.match(/\r|\n|\t/) ? about.text.delete("\t").delete("\r").delete("\n") : about.text,
       :tags => tags.map {|tag| tag.match(/\r|\n|\t/) ? tag.delete("\t").delete("\r").delete("\n") : tag },
-      :details => details.map {|child| child.text}
-    }
-
+      :details => details.map {|child| child.text} }
   end
 
   def self.get_page_number(index_url)
@@ -64,8 +60,7 @@ class SteamUpcoming::Scraper
     page = doc.css(".search_pagination_right").first.children[5].text.to_i
   end
 
-  def self.get_sorting_options(index_url)
-  end
-  
+  #def self.get_sorting_options(index_url)
+  #end
 
 end

@@ -48,7 +48,8 @@ RSpec.describe SteamUpcoming::Game do
         expect(scraped_games).to be_a(Array)
         expect(scraped_games.first).to have_key(:name)
         expect(scraped_games.first).to have_key(:release_date)
-        #expect(scraped_games).to include(game_index_array[0], game_index_array[1])
+        expect(scraped_games.first).to have_key(:platforms)
+        expect(scraped_games.first).to have_key(:url)
       end
     end
 
@@ -67,7 +68,7 @@ RSpec.describe SteamUpcoming::Game do
       it 'it gets the number of pages from the home page' do
         index_url = "http://store.steampowered.com/search/?filter=comingsoon"
         pages = SteamUpcoming::Scraper.get_page_number(index_url)
-        expect(pages).to eq(18)
+        expect(pages).to be_a(Integer)
       end
     end
   
