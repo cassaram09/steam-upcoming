@@ -5,6 +5,7 @@ class SteamUpcoming::Scraper
 
   def self.scrape_index_page(index_url)
     doc = Nokogiri::HTML(open(index_url))
+    binding.pry
     game_array = []
     doc.css(".search_result_row").each do |game|
       game_hash = {
@@ -15,8 +16,12 @@ class SteamUpcoming::Scraper
       }
       game_array << game_hash
     end
+    binding.pry
     game_array
   end
+
+
+  doc = Nokogiri::HTML(open("http://store.steampowered.com/search/?filter=comingsoon#sort_by=_ASC&sort_order=ASC&filter=comingsoon&page=5"))
 
   def self.gather_platforms(parent)
     platforms = parent.children.map do |platform|
@@ -59,10 +64,10 @@ class SteamUpcoming::Scraper
     }
   end
 
-  #def self.get_page_number(index_url)
-  #  doc = Nokogiri::HTML(open(index_url))
-  #  page_array = []
-  #  page = doc.css(".search_pagination_right").first.children[5].text.to_i
-  #end
+  def self.page_count(index_url)
+    doc = Nokogiri::HTML(open(index_url))
+    page_count = doc.css(".search_pagination_right").first.children[5].text.to_i
+    page_count
+  end
 
 end

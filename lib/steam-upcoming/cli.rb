@@ -5,17 +5,27 @@ require 'colorize'
 require 'pry'
 
 class SteamUpcoming::CLI
-  BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon"
+  BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon#sort_by=&sort_order=0&filter=comingsoon&page=1"
 
   def run
     puts "Fetching latest games from the Steam Network...".colorize(:yellow)
-    make_games
+    make_games(BASE_URL)
     start
   end
 
-  def make_games
-    game_array = SteamUpcoming::Scraper.scrape_index_page(BASE_URL)
+  def make_games(url)
+    game_array = SteamUpcoming::Scraper.scrape_index_page(url)
+    binding.pry
     SteamUpcoming::Game.create_from_collection(game_array)
+  end
+
+  def change_page #allow the users to select another page
+    input = gets.chomp
+    pages = SteamUpcoming::Game.create_pages(SteamUpcoming::Scraper.page_count(BASE_URL)) #generate list of pages
+    new_url = pages[input.to_i-1]
+    binding.pry
+    make_games(new_url)
+    list
   end
 
   def list_game(game)
@@ -46,7 +56,7 @@ class SteamUpcoming::CLI
     puts ""
     puts "//-------------- Upcoming Games on Steam --------------//".colorize(:yellow)
     puts ""
-    SteamUpcoming::Game.all.each.with_index(1) do |game, index|
+    SteamUpcoming::Game.all.each.with_index do |game, index|
       puts "#{index}. #{game.name}"
     end
     puts "" 
@@ -71,6 +81,8 @@ class SteamUpcoming::CLI
           list_game(game)
         elsif input == "exit"
           break
+        elsif input == "change"
+          change_page
         else
           puts "#{input}".colorize(:red).concat(" is not a valid command.")
         end

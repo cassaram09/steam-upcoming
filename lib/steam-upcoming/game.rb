@@ -21,6 +21,16 @@ class SteamUpcoming::Game
     game_attributes_hash.each {|key, value| self.send(("#{key}="), value)} 
   end
 
+  def self.create_pages(page_count)
+    i = 1
+    pages = []
+    while i < page_count.to_i
+      pages << "http://store.steampowered.com/search/?filter=comingsoon#sort_by=&sort_order=0&filter=comingsoon&page=#{i}"
+      i += 1
+    end
+    pages
+  end
+
   def self.all
     @@all
   end
