@@ -1,4 +1,8 @@
+require 'pry'
+
 class SteamUpcoming::Scraper
+  attr_accessor :name, :release_date, :platforms, :url
+
   def self.scrape_index_page(index_url)
     doc = Nokogiri::HTML(open(index_url))
     game_array = []
@@ -51,16 +55,14 @@ class SteamUpcoming::Scraper
     game_attributes_hash = {
       :about => about.text.match(/\r|\n|\t/) ? about.text.delete("\t").delete("\r").delete("\n") : about.text,
       :tags => tags.map {|tag| tag.match(/\r|\n|\t/) ? tag.delete("\t").delete("\r").delete("\n") : tag },
-      :details => details.map {|child| child.text} }
+      :details => details.map {|child| child.text} 
+    }
   end
 
-  def self.get_page_number(index_url)
-    doc = Nokogiri::HTML(open(index_url))
-    page_array = []
-    page = doc.css(".search_pagination_right").first.children[5].text.to_i
-  end
-
-  #def self.get_sorting_options(index_url)
+  #def self.get_page_number(index_url)
+  #  doc = Nokogiri::HTML(open(index_url))
+  #  page_array = []
+  #  page = doc.css(".search_pagination_right").first.children[5].text.to_i
   #end
 
 end

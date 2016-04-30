@@ -50,10 +50,6 @@ RSpec.describe SteamUpcoming::Game do
 
   describe SteamUpcoming::Game do
 
-    
-    
-    
-
     describe "#new" do
 
       let(:skyreach){SteamUpcoming::Game.new({:name => "Skyreach", :release_date=> "April 2016", :platforms => ["Windows, Mac"], :url => "http://www.google.com"})}
@@ -81,7 +77,6 @@ RSpec.describe SteamUpcoming::Game do
 
     describe "#create_from_collection" do
 
-      #let(:zombies){SteamUpcoming::Game.new({:name => "Zombies", :release_date=> "April 2016", :platforms => ["Windows, Mac"], :url => "http://www.google.com"})}
       let(:game_hash_array){[
       {:name => "Zombies", :release_date=> "April 2016", :platforms => ["Windows, Mac"], :url => "http://www.google.com"},
       {:name => "Gravity", :release_date=> "April 2016", :platforms => ["Windows, Mac"], :url => "http://www.google.com"},
@@ -122,10 +117,48 @@ RSpec.describe SteamUpcoming::Game do
 
   end
 
+
+  describe SteamUpcoming::CLI do
+    SteamUpcoming::Game.reset
+
+    
+
+    describe "#make_games" do
+      it "makes games" do
+        upcoming  = SteamUpcoming::CLI.new
+        upcoming.make_games
+      end
+    end
+
+    #describe "#add_attributes_to_games" do
+    #  it "adds attributes to games" do
+    #    upcoming = SteamUpcoming::CLI.new
+    #    upcoming.add_attributes_to_games
+    #  end
+    #end
+
+    describe "#list" do
+      it "lists games in the terminal" do
+        SteamUpcoming::Game.reset
+        upcoming = SteamUpcoming::CLI.new
+        upcoming.add_attributes_to_games
+        upcoming.list
+      end
+    end
+
+    describe "#list_games" do
+    end
+
+    describe "#run" do
+      it "runs the program" do
+        upcoming = SteamUpcoming::CLI.new.run
+      end
+    end
+
+  end
+
 end
 
-#game = SteamUpcoming::Game.new({:name => "Skyreach", :release_date=> "April 2016", :platforms => ["Windows, Mac"], :url => "http://www.google.com"})
-#game_hash = {:about => "this is skyreach", :tags => ["Free to Play", "Indie", "Casual", "Racing"], :details=>["Single-player", "Steam Achievements", "Full controller support"] }
 
 
 
