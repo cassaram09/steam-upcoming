@@ -10,7 +10,8 @@ class SteamUpcoming::CLI
   def run
     puts "Fetching latest games from the Steam Network...".colorize(:yellow)
     make_games
-    add_attributes_to_games
+    #add_attributes_to_games
+    
     start
   end
 
@@ -20,13 +21,18 @@ class SteamUpcoming::CLI
   end
 
   def add_attributes_to_games
-    SteamUpcoming::Game.all.each do |game|
-      attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
-      game.add_game_attributes(attributes)
-    end
+    #SteamUpcoming::Game.all.each do |game|
+    #  attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
+    #  game.add_game_attributes(attributes)
+    #end
+    attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
+    game.add_game_attributes(attributes)
   end
 
   def list_game(game)
+    #binding.pry
+    attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
+    game.add_game_attributes(attributes)
     puts ""
     puts "//-------------- #{game.name} --------------//".colorize(:yellow)
     puts ""
@@ -72,11 +78,11 @@ class SteamUpcoming::CLI
       if input == "list"
         list
       elsif input.to_i == 0
-        if movie = SteamUpcoming::Game.find_by_name(input)
+        if game = SteamUpcoming::Game.find_by_name(input)
           list_game(game)
         end
       elsif input.to_i > 0
-        if movie = SteamUpcoming::Game.find(input.to_i)
+        if game = SteamUpcoming::Game.find(input.to_i)
           list_game(game)
         end
       end
