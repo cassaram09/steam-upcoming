@@ -8,7 +8,7 @@ class SteamUpcoming::CLI
   BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon"
 
   def run
-    puts "Fetching latest games from the Steam Network..."
+    puts "Fetching latest games from the Steam Network...".colorize(:yellow)
     make_games
     add_attributes_to_games
     start
@@ -28,27 +28,28 @@ class SteamUpcoming::CLI
 
   def list_game(game)
     puts ""
-    puts "//-------------- #{game.name} --------------//"
+    puts "//-------------- #{game.name} --------------//".colorize(:yellow)
     puts ""
+    puts "About #{game.name}".colorize(:light_blue)
     puts game.about
     puts ""
-    puts "Tags:"
+    puts "Tags:".colorize(:light_blue)
     game.tags.each {|tag| puts " - #{tag}"}
     puts ""
-    puts "Details:"
+    puts "Details:".colorize(:light_blue)
     game.details.each {|detail| puts " - #{detail}"}
     puts ""
-    puts "Release Date:"
+    puts "Release Date:".colorize(:light_blue)
     puts " - #{game.release_date}" 
     puts ""
-    puts "Platforms:"
+    puts "Platforms:".colorize(:light_blue)
     game.platforms.each {|platform| puts " - #{platform}"}
     puts ""
   end
 
   def list
     puts ""
-    puts "************* Upcoming Games on the Steam Network *************"
+    puts "//-------------- Upcoming Games on the Steam Network --------------//".colorize(:yellow)
     puts ""
     SteamUpcoming::Game.all.each.with_index(1) do |game, index|
       puts "#{index}. #{game.name}"
@@ -66,16 +67,18 @@ class SteamUpcoming::CLI
       puts "Enter list to see the games again."
       puts "Enter exit to end the program."
       puts ""
-      print "please make a selection: > "
+      print " > "
       input = gets.chomp
       if input == "list"
         list
-      elsif input.to_i > 0
-        if game = SteamUpcoming::Game.find(input.to_i)
+      elsif input.to_i == 0
+        if movie = SteamUpcoming::Game.find_by_name(input)
           list_game(game)
         end
-      elsif 
-        nil
+      elsif input.to_i > 0
+        if movie = SteamUpcoming::Game.find(input.to_i)
+          list_game(game)
+        end
       end
     end
     puts "Goodbye!"
