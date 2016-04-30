@@ -25,7 +25,7 @@ class SteamUpcoming::Game
     i = 1
     pages = []
     while i < page_count.to_i
-      pages << "http://store.steampowered.com/search/?filter=comingsoon#sort_by=&sort_order=0&filter=comingsoon&page=#{i}"
+      pages << "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=#{i}"
       i += 1
     end
     pages

@@ -5,8 +5,7 @@ require 'colorize'
 require 'pry'
 
 class SteamUpcoming::CLI
-  BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon#sort_by=&sort_order=0&filter=comingsoon&page=1"
-
+  BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1"
   def run
     puts "Fetching latest games from the Steam Network...".colorize(:yellow)
     make_games(BASE_URL)
@@ -15,21 +14,29 @@ class SteamUpcoming::CLI
 
   def make_games(url)
     game_array = SteamUpcoming::Scraper.scrape_index_page(url)
-    binding.pry
+    
     SteamUpcoming::Game.create_from_collection(game_array)
   end
 
-  def change_page #allow the users to select another page
-    input = gets.chomp
+  def pages
     pages = SteamUpcoming::Game.create_pages(SteamUpcoming::Scraper.page_count(BASE_URL)) #generate list of pages
-    new_url = pages[input.to_i-1]
-    binding.pry
-    make_games(new_url)
-    list
+  end
+
+  def change_page #allow the users to select another page
+    print " Enter a page number > "
+    input = gets.chomp.strip
+    if new_url = pages[input.to_i-1]
+      SteamUpcoming::Game.reset
+      make_games(new_url)
+      list
+      puts ""
+      puts "You are on page #{input}."
+    else
+      puts "\n#{input}".colorize(:red).concat(" is not a valid page number.")
+    end
   end
 
   def list_game(game)
-    #binding.pry
     attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
     game.add_game_attributes(attributes)
     puts ""
@@ -57,9 +64,10 @@ class SteamUpcoming::CLI
     puts "//-------------- Upcoming Games on Steam --------------//".colorize(:yellow)
     puts ""
     SteamUpcoming::Game.all.each.with_index do |game, index|
-      puts "#{index}. #{game.name}"
+      puts "#{index+1}. #{game.name}"
     end
     puts "" 
+    puts "#{pages.count} pages available."
   end
 
   def start
@@ -71,9 +79,10 @@ class SteamUpcoming::CLI
       puts ""
       puts "Enter \'list\'' to list games.".colorize(:light_blue)
       puts "Enter \'exit\' to exit.".colorize(:light_blue)
+      puts "Enter \'page\' to switch pages.".colorize(:light_blue)
       puts ""
       print " > "
-      input = gets.chomp
+      input = gets.chomp.strip
       if input == "list"
         list
       elsif input.to_i == 0
@@ -81,7 +90,7 @@ class SteamUpcoming::CLI
           list_game(game)
         elsif input == "exit"
           break
-        elsif input == "change"
+        elsif input == "page"
           change_page
         else
           puts "#{input}".colorize(:red).concat(" is not a valid command.")
