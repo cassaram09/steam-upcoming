@@ -1,3 +1,5 @@
+require 'pry'
+
 class SteamUpcoming::Game
   attr_accessor :name, :release_date, :platforms, :url, :about, :tags, :details 
 
@@ -10,17 +12,23 @@ class SteamUpcoming::Game
 
   def self.create_from_collection(games_hash_array)
     games_hash_array.each do |game|
-      object = Game.new(game)
+      object = SteamUpcoming::Game.new(game)
     end
   end
 
   def add_game_attributes(game_attributes_hash)
     game_attributes_hash.each {|key, value| self.send(("#{key}="), value)}
+    
   end
 
   def self.all
     @@all
   end
 
+  def self.reset 
+    @@all.clear
+  end
+
 
 end
+

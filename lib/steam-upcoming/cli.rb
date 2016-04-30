@@ -49,4 +49,3 @@ class SteamUpcoming::CLI
   end
 end
 
-SteamUpcoming::CLI.new.run
