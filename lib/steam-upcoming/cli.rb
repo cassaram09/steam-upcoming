@@ -10,23 +10,12 @@ class SteamUpcoming::CLI
   def run
     puts "Fetching latest games from the Steam Network...".colorize(:yellow)
     make_games
-    #add_attributes_to_games
-    
     start
   end
 
   def make_games
     game_array = SteamUpcoming::Scraper.scrape_index_page(BASE_URL)
     SteamUpcoming::Game.create_from_collection(game_array)
-  end
-
-  def add_attributes_to_games
-    #SteamUpcoming::Game.all.each do |game|
-    #  attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
-    #  game.add_game_attributes(attributes)
-    #end
-    attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
-    game.add_game_attributes(attributes)
   end
 
   def list_game(game)
@@ -55,7 +44,7 @@ class SteamUpcoming::CLI
 
   def list
     puts ""
-    puts "//-------------- Upcoming Games on the Steam Network --------------//".colorize(:yellow)
+    puts "//-------------- Upcoming Games on Steam --------------//".colorize(:yellow)
     puts ""
     SteamUpcoming::Game.all.each.with_index(1) do |game, index|
       puts "#{index}. #{game.name}"
@@ -68,10 +57,10 @@ class SteamUpcoming::CLI
     input = nil
     while input != "exit"
       puts ""
-      puts "What game would you more information on, by name or number?"
+      puts "Learn more about a game by typing a name or number.".colorize(:yellow)
       puts ""
-      puts "Enter list to see the games again."
-      puts "Enter exit to end the program."
+      puts "Enter \'list\'' to list games.".colorize(:light_blue)
+      puts "Enter \'exit\' to exit.".colorize(:light_blue)
       puts ""
       print " > "
       input = gets.chomp
@@ -80,14 +69,20 @@ class SteamUpcoming::CLI
       elsif input.to_i == 0
         if game = SteamUpcoming::Game.find_by_name(input)
           list_game(game)
+        elsif input == "exit"
+          break
+        else
+          puts "#{input}".colorize(:red).concat(" is not a valid command.")
         end
       elsif input.to_i > 0
         if game = SteamUpcoming::Game.find(input.to_i)
           list_game(game)
+        else
+          puts "#{input}".colorize(:red).concat(" is not a valid selection. Please enter a number between 1 and #{SteamUpcoming::Game.all.count}.")
         end
       end
     end
-    puts "Goodbye!"
+    puts "Shutting down...".colorize(:yellow)
   end
 end
 
