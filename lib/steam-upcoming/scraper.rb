@@ -1,9 +1,10 @@
-require 'pry'
+#The SteamUpcoming::Scraper class is responsible for scraping information off of the target webpage
+#and outputting hashes of information to be used by the SteamUpcoming::Game class. 
 
 class SteamUpcoming::Scraper
   attr_accessor :name, :release_date, :platforms, :url
 
-  def self.scrape_index_page(index_url)
+  def self.scrape_index_page(index_url) #scrape the page and create an array of hashes (1 hash for each game)
     doc = Nokogiri::HTML(open(index_url))
     
     game_array = []
@@ -16,14 +17,10 @@ class SteamUpcoming::Scraper
       }
       game_array << game_hash
     end
-    
     game_array
   end
 
-
-  #doc2 = Nokogiri::HTML(open("http://store.steampowered.com/search/?filter=comingsoon#sort_by=_ASC&sort_order=ASC&filter=comingsoon&page=5"))
-
-  def self.gather_platforms(parent)
+  def self.gather_platforms(parent) #
     platforms = parent.children.map do |platform|
       platform == 0 || platform == nil ? next : platform.attr('class')
     end
@@ -69,5 +66,4 @@ class SteamUpcoming::Scraper
     page_count = doc.css(".search_pagination_right").first.children[5].text.to_i
     page_count
   end
-
 end

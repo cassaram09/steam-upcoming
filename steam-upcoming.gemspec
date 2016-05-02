@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Matt Cassara"]
   spec.email         = ["cassaram09@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = "This gem collects a list of upcoming games from the Steam Network via scraping."
+  spec.description   = ""
   spec.homepage      = "https://github.com/cassaram09/steam-upcoming"
   spec.license       = "MIT"
 
@@ -30,4 +30,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "open-uri"
+  spec.add_development_dependency "nokogiri" 
+  spec.add_development_dependency "colorize" 
+  spec.add_development_dependency "pry" 
 end

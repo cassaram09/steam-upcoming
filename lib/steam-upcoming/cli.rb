@@ -1,25 +1,28 @@
-require_relative "scraper.rb"
-require_relative "game.rb"
-require 'nokogiri'
-require 'colorize'
-require 'pry'
-
 class SteamUpcoming::CLI
   BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1"
-  def run
+  
+  def run #run the program
     puts "Fetching latest games from the Steam Network...".colorize(:yellow)
     make_games(BASE_URL)
+    pages
     start
   end
 
-  def make_games(url)
+  def make_games(url) #creates the list of games from the URL
     game_array = SteamUpcoming::Scraper.scrape_index_page(url)
-    
     SteamUpcoming::Game.create_from_collection(game_array)
   end
 
-  def pages
-    pages = SteamUpcoming::Game.create_pages(SteamUpcoming::Scraper.page_count(BASE_URL)) #generate list of pages
+  def pages #generate list of pages
+    pages = SteamUpcoming::Game.create_pages(SteamUpcoming::Scraper.page_count(BASE_URL)) 
+  end
+
+  def page?(input=nil) #calculates the page the user is on
+    if input != nil
+      puts "you are on page #{input}"
+    else
+      puts "you are on main page."
+    end
   end
 
   def change_page #allow the users to select another page
@@ -29,14 +32,12 @@ class SteamUpcoming::CLI
       SteamUpcoming::Game.reset
       make_games(new_url)
       list
-      puts ""
-      puts "You are on page #{input}."
     else
       puts "\n#{input}".colorize(:red).concat(" is not a valid page number.")
     end
   end
 
-  def list_game(game)
+  def list_game(game) #list a game's details
     attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
     game.add_game_attributes(attributes)
     puts ""
@@ -59,7 +60,7 @@ class SteamUpcoming::CLI
     puts ""
   end
 
-  def list
+  def list #list the games
     puts ""
     puts "//-------------- Upcoming Games on Steam --------------//".colorize(:yellow)
     puts ""
@@ -67,10 +68,12 @@ class SteamUpcoming::CLI
       puts "#{index+1}. #{game.name}"
     end
     puts "" 
-    puts "#{pages.count} pages available."
+    puts "#{pages.count} pages available.".colorize(:yellow)
+    puts ""
+    puts "#{}"
   end
 
-  def start
+  def start #start the program loop
     list
     input = nil
     while input != "exit"
@@ -85,7 +88,7 @@ class SteamUpcoming::CLI
       input = gets.chomp.strip
       if input == "list"
         list
-      elsif input.to_i == 0
+      elsif input.to_i == 0 #if input is a name
         if game = SteamUpcoming::Game.find_by_name(input)
           list_game(game)
         elsif input == "exit"
@@ -95,7 +98,7 @@ class SteamUpcoming::CLI
         else
           puts "#{input}".colorize(:red).concat(" is not a valid command.")
         end
-      elsif input.to_i > 0
+      elsif input.to_i > 0 #if a number, look up the number
         if game = SteamUpcoming::Game.find(input.to_i)
           list_game(game)
         else
@@ -103,9 +106,8 @@ class SteamUpcoming::CLI
         end
       end
     end
-    puts "Shutting down...".colorize(:yellow)
+    puts ""
+    puts "Shutting down...".colorize(:red)
+    puts ""
   end
 end
-
-
-
