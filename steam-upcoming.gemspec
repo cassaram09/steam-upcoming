@@ -5,7 +5,7 @@ require 'steam-upcoming/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "steam-upcoming"
-  spec.version       = Steam::Upcoming::VERSION
+  spec.version       = SteamUpcoming::VERSION
   spec.authors       = ["Matt Cassara"]
   spec.email         = ["cassaram09@gmail.com"]
 
