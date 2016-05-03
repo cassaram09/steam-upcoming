@@ -8,6 +8,7 @@ class SteamUpcoming::CLI
   end
 
   def run #run the program
+    binding.pry
     puts "\nFetching latest games from the Steam Network...".colorize(:yellow)
     make_games(BASE_URL)
     pages
@@ -102,7 +103,4 @@ class SteamUpcoming::CLI
   end
 
 end
-
-
-SteamUpcoming::CLI.new
 

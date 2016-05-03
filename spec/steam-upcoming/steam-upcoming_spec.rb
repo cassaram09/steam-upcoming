@@ -39,13 +39,6 @@ RSpec.describe SteamUpcoming::Game do
       end
     end
 
-    describe "#get_page_number" do
-      it 'it gets the number of pages from the home page' do
-        index_url = "http://store.steampowered.com/search/?filter=comingsoon"
-        pages = SteamUpcoming::Scraper.get_page_number(index_url)
-        expect(pages).to be_a(Integer)
-      end
-    end
   end
 
   describe SteamUpcoming::Game do
@@ -126,7 +119,7 @@ RSpec.describe SteamUpcoming::Game do
     describe "#make_games" do
       it "makes games" do
         upcoming  = SteamUpcoming::CLI.new
-        upcoming.make_games
+        upcoming.make_games("http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1")
       end
     end
 
@@ -137,14 +130,14 @@ RSpec.describe SteamUpcoming::Game do
     #  end
     #end
 
-    describe "#list" do
-      it "lists games in the terminal" do
-        SteamUpcoming::Game.reset
-        upcoming = SteamUpcoming::CLI.new
-        upcoming.add_attributes_to_games
-        upcoming.list
-      end
-    end
+    #describe "#list" do
+    #  it "lists games in the terminal" do
+    #    SteamUpcoming::Game.reset
+    #    upcoming = SteamUpcoming::CLI.new
+    #    upcoming.add_attributes_to_games
+    #    upcoming.list
+    #  end
+    #end
 
     describe "#list_games" do
     end
