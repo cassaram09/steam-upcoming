@@ -19,14 +19,14 @@ class SteamUpcoming::Scraper
     game_array
   end
 
-  def self.gather_platforms(parent) #gather a list of platforms, then return an array of legit platforms
+  def self.gather_platforms(parent) #gather a list of platforms, then return an array of actual platforms
     platforms = parent.children.map do |platform|
       platform.attr('class')
     end
     platforms.select {|platform| platform != nil} 
   end
 
-  def self.convert_platforms(platform_array) #need to convert the platform array items into actual names, because the source is an image, not
+  def self.convert_platforms(platform_array) #convert the platform array items into actual names, because the source is an image, not text
     platforms = platform_array.map! do |platform|
       if platform.include?("win")
         platform = "Windows"
@@ -47,7 +47,7 @@ class SteamUpcoming::Scraper
     platforms.select {|platform| platform != nil}
   end
 
-  def self.scrape_game_page(game_url)
+  def self.scrape_game_page(game_url) #scrape the page and create a hash of game attributes
     doc = Nokogiri::HTML(open(game_url))
     about = doc.css(".game_description_snippet")
     tags = doc.css(".glance_tags a").map {|tag| tag.text}
@@ -59,7 +59,7 @@ class SteamUpcoming::Scraper
     }
   end
 
-  def self.page_count(index_url)
+  def self.page_count(index_url) #scrape the pages to get the total number of pages
     doc = Nokogiri::HTML(open(index_url))
     page_count = doc.css(".search_pagination_right").first.children[5].text.to_i
   end
