@@ -21,7 +21,7 @@ class SteamUpcoming::Game
   def self.create_pages(page_count) #create the page urls
     i = 1
     pages = []
-    while i < page_count.to_i
+    while i <= page_count.to_i
       pages << "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=#{i}"
       i += 1
     end
