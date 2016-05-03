@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/steam-upcoming'
+require_relative '../config/environment'
 
 SteamUpcoming::CLI.new.run

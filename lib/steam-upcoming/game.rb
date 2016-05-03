@@ -1,3 +1,6 @@
+# The SteamUpcoming::Game class is responsible for taking informatino scraped from the Steam website
+# and creating new Game objects with attributes. 
+
 class SteamUpcoming::Game
   attr_accessor :name, :release_date, :platforms, :url, :about, :tags, :details 
 
@@ -14,11 +17,11 @@ class SteamUpcoming::Game
     end
   end
 
-  def add_game_attributes(game_attributes_hash) #add attributes to game
+  def add_game_attributes(game_attributes_hash) #add attributes to the Game object
     game_attributes_hash.each {|key, value| self.send(("#{key}="), value)} 
   end
 
-  def self.create_pages(page_count) #create the page urls
+  def self.create_pages(page_count) #Create the page urls
     i = 1
     pages = []
     while i <= page_count.to_i
@@ -28,10 +31,12 @@ class SteamUpcoming::Game
     pages
   end
 
+  private
   def self.all #show all games
     @@all
   end
 
+  private
   def self.reset #clear the list of games
     @@all.clear
   end
