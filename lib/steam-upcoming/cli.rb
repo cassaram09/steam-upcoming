@@ -26,7 +26,8 @@ class SteamUpcoming::CLI
   def change_page #allow the users to select another page
     print "Enter a page number > "
     input = gets.chomp.strip
-    if @url = pages[input.to_i-1] #use the users input to select the corresponding page URL from the #pages array
+    @url = pages[input.to_i-1] #use the users input to select the corresponding page URL from the #pages array
+    if @url 
       SteamUpcoming::Game.reset #clear out the class variable so it can be populated with a new list of games
       make_games(@url) #create the games with the new chosen URL
       list
