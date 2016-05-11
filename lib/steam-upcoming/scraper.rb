@@ -4,19 +4,15 @@
 class SteamUpcoming::Scraper
   attr_accessor :name, :release_date, :platforms, :url
 
-  def self.scrape_index_page(index_url) #scrape the page and create an array of hashes (1 hash for each game)
+  def self.scrape_index_page(index_url) #scrape the page and create game objects with scraped properties
     doc = Nokogiri::HTML(open(index_url))
-    game_array = []
     doc.css(".search_result_row").each do |game|
-      game_hash = {
-        :name=> game.css(".title").text, 
-        :release_date=> game.css(".search_released").text,  
-        :platforms=> self.convert_platforms(gather_platforms(game.css(".search_name p"))), 
-        :url=> game.first[1]
-      }
-      game_array << game_hash
+      game_object = Game.new
+      game_object.name game.css(".title").text
+      game_object.release_date = game.css(".search_released").text  
+      game_object.platforms = self.convert_platforms(gather_platforms(game.css(".search_name p"))), 
+      game_object.url = game.first[1]
     end
-    game_array
   end
 
   def self.gather_platforms(parent) #gather a list of platforms, then return an array of actual platforms
