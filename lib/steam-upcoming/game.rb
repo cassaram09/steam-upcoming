@@ -1,5 +1,5 @@
-# The SteamUpcoming::Game class is responsible for taking informatino scraped from the Steam website
-# and creating new Game objects with attributes. 
+# The SteamUpcoming::Game class is responsible for creating new Game objects with the information 
+# collected from the SteamUpcoming::Scraper class.
 
 class SteamUpcoming::Game
   attr_accessor :name, :release_date, :platforms, :url, :about, :tags, :details 
@@ -8,16 +8,6 @@ class SteamUpcoming::Game
 
   def initialize
     @@all << self
-  end
-
-  def self.create_pages(page_count) #Create the page urls
-    i = 1
-    pages = []
-    while i <= page_count.to_i
-      pages << "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=#{i}"
-      i += 1
-    end
-    pages
   end
 
   private

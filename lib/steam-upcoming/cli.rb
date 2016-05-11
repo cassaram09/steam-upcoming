@@ -21,7 +21,7 @@ class SteamUpcoming::CLI
   end
 
   def pages #generate list of page URLs as an array
-    pages = SteamUpcoming::Game.create_pages(SteamUpcoming::Scraper.page_count(BASE_URL)) 
+    SteamUpcoming::Scraper.create_pages_with_urls(BASE_URL)
   end
 
   def change_page #allow the users to select another page
@@ -59,7 +59,6 @@ class SteamUpcoming::CLI
       puts "#{index+1}. #{game.name}"
     end
     puts "\nPage #{current_page} of #{pages.count}".colorize(:yellow)
-    binding.pry
   end
 
   def current_page
