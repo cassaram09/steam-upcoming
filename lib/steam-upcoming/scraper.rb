@@ -65,4 +65,10 @@ class SteamUpcoming::Scraper
     end
     pages
   end
+
+  def self.get_number_of_results(index_url)
+    doc = Nokogiri::HTML(open(index_url))
+    results = doc.css(".search_pagination_left").first.children.text
+    results.match(/\d{3,}/).to_s
+  end
 end

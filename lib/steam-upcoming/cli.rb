@@ -10,7 +10,7 @@ class SteamUpcoming::CLI
   end
 
   def run #run the program
-    puts "\nFetching latest games from the Steam Network...".colorize(:yellow)
+    puts "\nFetching latest games from the Steam Network...".colorize(:cyan)
     make_games(BASE_URL)
     pages
     start
@@ -24,9 +24,13 @@ class SteamUpcoming::CLI
     SteamUpcoming::Scraper.create_pages_with_urls(BASE_URL)
   end
 
+  def number_of_results
+    results = SteamUpcoming::Scraper.get_number_of_results(BASE_URL)
+  end
+
   def change_page #allow the users to select another page
     print "Enter a page number > "
-    input = gets.chomp.strip
+    input = gets.chomp
     @url = pages[input.to_i-1] #use the users input to select the corresponding page URL from the #pages array
     if  @url 
       SteamUpcoming::Game.reset #clear out the class variable so it can be populated with a new list of games
@@ -40,15 +44,15 @@ class SteamUpcoming::CLI
   def list_game(game) #list a game's details
     SteamUpcoming::Scraper.scrape_game_page(game.url)
     puts "\n//-------------- #{game.name} --------------//\n".colorize(:yellow)
-    puts "About #{game.name}".colorize(:light_blue)
+    puts "About #{game.name}".colorize(:yellow)
     puts game.about
-    puts "\nTags:".colorize(:light_blue)
+    puts "\nTags:".colorize(:yellow)
     game.tags.each {|tag| puts " - #{tag}"}
-    puts "\nDetails:".colorize(:light_blue)
+    puts "\nDetails:".colorize(:yellow)
     game.details.each {|detail| puts " - #{detail}"}
-    puts "\nRelease Date:".colorize(:light_blue)
+    puts "\nRelease Date:".colorize(:yellow)
     puts " - #{game.release_date}" 
-    puts "\nPlatforms:".colorize(:light_blue)
+    puts "\nPlatforms:".colorize(:yellow)
     game.platforms.each {|platform| puts " - #{platform}"}
     puts ""
   end
@@ -58,13 +62,14 @@ class SteamUpcoming::CLI
     SteamUpcoming::Game.all.each.with_index do |game, index|
       puts "#{index+1}. #{game.name}"
     end
-    puts "\nPage #{current_page} of #{pages.count}".colorize(:yellow)
+    puts "\nPage #{current_page} of #{pages.count}".colorize(:white)
+    puts "\n#{number_of_results} results".colorize(:white)
   end
 
   def current_page
     url = @url[-2,2] #return the last two characters of the URL string
     array = url.split("").map {|x| x.to_i} #split the two characters into an array
-    array[0] == 0 ? current_page = array[0] + array[1] : current_page = "#{array[0]}".concat("#{array[1]}")
+    array[0] == 0 ? current_page = array[0] + array[1] : current_page = "#{array[0]}".concat("#{array[1]}").to_i
       #if the first element is a letter (it converts to 0), add it to the second element
       #if the both elements are numbers, concatenate them and return the new string
   end
@@ -74,9 +79,9 @@ class SteamUpcoming::CLI
     input = nil
     while input != "exit" #loop user input until user types 'exit'
       puts "\nLearn more about a game by typing a name or number.\n".colorize(:yellow)
-      puts "Enter \'list\'' to list games.".colorize(:light_blue)
-      puts "Enter \'exit\' to exit.".colorize(:light_blue)
-      puts "Enter \'page\' to switch pages.".colorize(:light_blue)
+      puts "Enter \'list\'' to list games.".colorize(:yellow)
+      puts "Enter \'exit\' to exit.".colorize(:yellow)
+      puts "Enter \'page\' to switch pages.".colorize(:yellow)
       print "\n > "
       input = gets.chomp.strip
       if input == "list"
