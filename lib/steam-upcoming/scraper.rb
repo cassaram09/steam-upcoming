@@ -1,5 +1,6 @@
 #The SteamUpcoming::Scraper class is responsible for scraping information off of the target webpage
 #and outputting hashes of information to be used by the SteamUpcoming::Game class. 
+require 'pry'
 
 class SteamUpcoming::Scraper
   attr_accessor :name, :release_date, :platforms, :url
@@ -7,23 +8,21 @@ class SteamUpcoming::Scraper
   def self.scrape_index_page(index_url) #scrape the page and create game objects with scraped properties
     doc = Nokogiri::HTML(open(index_url))
     doc.css(".search_result_row").each do |game|
-      game_object = Game.new
-      game_object.name game.css(".title").text
+      game_object = SteamUpcoming::Game.new
+      game_object.name = game.css(".title").text
       game_object.release_date = game.css(".search_released").text  
-      game_object.platforms = self.convert_platforms(gather_platforms(game.css(".search_name p"))), 
+      game_object.platforms = self.convert_platforms(gather_platforms(game.css(".search_name p"))) 
       game_object.url = game.first[1]
     end
   end
 
   def self.gather_platforms(parent) #gather a list of platforms, then return an array of actual platforms
-    platforms = parent.children.map do |platform|
-      platform.attr('class')
-    end
-    platforms.select {|platform| platform != nil} 
+    gathered_platforms = parent.children.map {|platform| platform.attr('class')}
+    gathered_platforms.delete_if {|platform| platform == nil} 
   end
 
   def self.convert_platforms(platform_array) #convert the platform array items into actual names, because the source is an image, not text
-    platforms = platform_array.map! do |platform|
+    converted_platforms = platform_array.map! do |platform|
       if platform.include?("win")
         platform = "Windows"
       elsif platform.include?("mac")
@@ -40,19 +39,22 @@ class SteamUpcoming::Scraper
         platform = nil
       end
     end
-    platforms.select {|platform| platform != nil}
+    converted_platforms.delete_if {|platform| platform == nil}
   end
 
   def self.scrape_game_page(game_url) #scrape the page and create a hash of game attributes
     doc = Nokogiri::HTML(open(game_url))
-    about = doc.css(".game_description_snippet")
+    about = doc.css(".game_area_description")
     tags = doc.css(".glance_tags a").map {|tag| tag.text}
     details = doc.css(".game_area_details_specs")
-    game_attributes_hash = {
-      :about => about.text.match(/\r|\n|\t/) ? about.text.delete("\t").delete("\r").delete("\n") : about.text,
-      :tags => tags.map {|tag| tag.match(/\r|\n|\t/) ? tag.delete("\t").delete("\r").delete("\n") : tag },
-      :details => details.map {|child| child.text} 
-    }
+    SteamUpcoming::Game.all.each do |game|
+       if game_url == game.url
+        game.about = about.text.match(/\r|\n|\t/) ? about.text.delete("\t").delete("\r").delete("\n") : about.text
+        game.tags = tags.map {|tag| tag.match(/\r|\n|\t/) ? tag.delete("\t").delete("\r").delete("\n") : tag }
+        game.details = details.map {|child| child.text}
+        return game
+      end
+    end
   end
 
   def self.page_count(index_url) #scrape the pages to get the total number of pages

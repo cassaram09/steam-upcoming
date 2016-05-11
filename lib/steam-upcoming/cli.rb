@@ -1,3 +1,5 @@
+require 'pry'
+
 class SteamUpcoming::CLI
   attr_accessor :url
 
@@ -15,8 +17,7 @@ class SteamUpcoming::CLI
   end
 
   def make_games(url) #creates the list of game objects from the chosen URL
-    game_array = SteamUpcoming::Scraper.scrape_index_page(url)
-    SteamUpcoming::Game.create_from_collection(game_array)
+    SteamUpcoming::Scraper.scrape_index_page(url)
   end
 
   def pages #generate list of page URLs as an array
@@ -27,7 +28,7 @@ class SteamUpcoming::CLI
     print "Enter a page number > "
     input = gets.chomp.strip
     @url = pages[input.to_i-1] #use the users input to select the corresponding page URL from the #pages array
-    if @url 
+    if  @url 
       SteamUpcoming::Game.reset #clear out the class variable so it can be populated with a new list of games
       make_games(@url) #create the games with the new chosen URL
       list
@@ -37,8 +38,7 @@ class SteamUpcoming::CLI
   end
 
   def list_game(game) #list a game's details
-    attributes = SteamUpcoming::Scraper.scrape_game_page(game.url)
-    game.add_game_attributes(attributes)
+    SteamUpcoming::Scraper.scrape_game_page(game.url)
     puts "\n//-------------- #{game.name} --------------//\n".colorize(:yellow)
     puts "About #{game.name}".colorize(:light_blue)
     puts game.about
@@ -59,6 +59,7 @@ class SteamUpcoming::CLI
       puts "#{index+1}. #{game.name}"
     end
     puts "\nPage #{current_page} of #{pages.count}".colorize(:yellow)
+    binding.pry
   end
 
   def current_page

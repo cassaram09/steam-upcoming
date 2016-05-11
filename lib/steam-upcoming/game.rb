@@ -6,19 +6,8 @@ class SteamUpcoming::Game
 
   @@all = []
 
-  def initialize(game_hash)
-    game_hash.each {|key, value| self.send(("#{key}="), value)}
+  def initialize
     @@all << self
-  end
-
-  def self.create_from_collection(games_hash_array) #create game objects from an array of hashes
-    games_hash_array.each do |game|
-      object = SteamUpcoming::Game.new(game)
-    end
-  end
-
-  def add_game_attributes(game_attributes_hash) #add attributes to the Game object
-    game_attributes_hash.each {|key, value| self.send(("#{key}="), value)} 
   end
 
   def self.create_pages(page_count) #Create the page urls
