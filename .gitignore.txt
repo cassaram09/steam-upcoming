@@ -1,0 +1,31 @@
+#Wordpress
+wp-config.php
+
+#Projet Files
+.project
+.sublime-project
+.sublime-workspace
+
+#OS Files
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ethumbs.db
+Thumbs.db
+
+#SASS
+*.sass-cache*
+
+#Java files
+*.class
+*bin/
+.classpath
+.settings/
+
+#Node
+*node_modules/
+npm-debug.log
+
+#Bower
+*bower_components/

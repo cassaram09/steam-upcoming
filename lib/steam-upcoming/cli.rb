@@ -3,10 +3,10 @@ require 'pry'
 class SteamUpcoming::CLI
   attr_accessor :url
 
-  BASE_URL = "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1"
+  BASE_URL = "https://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1"
 
   def initialize 
-    @url = "http://store.steampowered.com/search/?filter=comingsoon&sort_order=0&filter=comingsoon&page=1"
+    @url = BASE_URL
   end
 
   def run #run the program
